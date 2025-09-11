@@ -1,32 +1,38 @@
 package com.formacaojavaspring.sistemaevento.entities;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.time.Instant;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_participante")
-public class Participante {
+@Table(name = "tb_bloco")
+public class Bloco {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String nome;
-    private String email;
 
-    @ManyToMany(mappedBy = "participantes")
-    private Set<Atividade> atividades = new HashSet<>();
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant inicio;
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant fim;
+
+    @ManyToOne
+    @JoinColumn(name = "atividade_id")
+    private Atividade atividade;
     
-    public Participante(Integer id, String nome, String email) {
+    public Bloco(Integer id, Instant inicio, Instant fim, Atividade atividade) {
         this.id = id;
-        this.nome = nome;
-        this.email = email;
+        this.inicio = inicio;
+        this.fim = fim;
+        this.atividade = atividade;
     }
 
     public Integer getId() {
@@ -37,24 +43,28 @@ public class Participante {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public Instant getInicio() {
+        return inicio;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setInicio(Instant inicio) {
+        this.inicio = inicio;
     }
 
-    public String getEmail() {
-        return email;
+    public Instant getFim() {
+        return fim;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setFim(Instant fim) {
+        this.fim = fim;
     }
 
-    public Set<Atividade> getAtividades() {
-        return atividades;
+    public Atividade getAtividade() {
+        return atividade;
+    }
+
+    public void setAtividade(Atividade atividade) {
+        this.atividade = atividade;
     }
 
     @Override
@@ -73,7 +83,7 @@ public class Participante {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Participante other = (Participante) obj;
+        Bloco other = (Bloco) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
